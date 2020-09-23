@@ -25,7 +25,9 @@ const List = () => {
         >
           <i className="music icon" />
           <div className="content">
-            <Link to={`/songs/${song.id}`}>
+            <Link
+              to={{ pathname: `/songs/${song.id}`, state: { id: song.id } }}
+            >
               <div className="header">{song.title}</div>
             </Link>
           </div>
