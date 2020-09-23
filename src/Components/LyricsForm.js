@@ -1,6 +1,7 @@
 import React from "react";
 
-const LyricsForm = () => {
+const LyricsForm = (props) => {
+  console.log(props);
   return (
     <div>
       <h1>LyricsForm</h1>
