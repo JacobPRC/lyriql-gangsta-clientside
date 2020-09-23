@@ -68,18 +68,22 @@ const Form = (props) => {
   useEffect(() => renderInput(), []);
 
   const inputOrTextArea = () => {
+    const inputTag = (
+      <input
+        input={input}
+        value={input}
+        type="text"
+        placeholder="Song Title"
+        style={{ marginBottom: "20%" }}
+        onChange={(e) => setInput(e.target.value)}
+      />
+    );
+
     if (!props.location) {
       return (
         <>
           <label style={{ color: "#ffe7aa" }}>Song Title</label>
-          <input
-            input={input}
-            value={input}
-            type="text"
-            placeholder="Song Title"
-            style={{ marginBottom: "20%" }}
-            onChange={(e) => setInput(e.target.value)}
-          />
+          {inputTag}
         </>
       );
     }
@@ -88,14 +92,7 @@ const Form = (props) => {
       return (
         <>
           <label style={{ color: "#ffe7aa" }}>Song Title</label>
-          <input
-            input={input}
-            value={input}
-            type="text"
-            placeholder="Song Title"
-            style={{ marginBottom: "20%" }}
-            onChange={(e) => setInput(e.target.value)}
-          />
+          {inputTag}
         </>
       );
     }
