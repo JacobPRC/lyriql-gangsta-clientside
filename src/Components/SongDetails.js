@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useQuery, gql, useMutation } from "@apollo/client";
 import { Link, useHistory } from "react-router-dom";
 
@@ -56,7 +56,11 @@ const SongDetails = (props) => {
           <Link
             to={{
               pathname: `/songs/${id}/edit-lyrics`,
-              state: { lyrics: true, content: lyric.content },
+              state: {
+                content: lyric.content,
+                lyricEdit: lyric.id,
+                lyrics: true,
+              },
             }}
           >
             <i className="edit icon"></i>
@@ -79,6 +83,8 @@ const SongDetails = (props) => {
       </h2>
     );
   };
+
+  refetch();
 
   return (
     <div style={divStyle}>
@@ -138,7 +144,7 @@ const SongDetails = (props) => {
         <Link
           to={{
             pathname: `/songs/${id}/new-lyrics`,
-            state: { lyrics: true },
+            state: { newLyrics: true, lyrics: true },
           }}
         >
           <i className="plus icon" style={{ fontSize: "2rem" }}></i>

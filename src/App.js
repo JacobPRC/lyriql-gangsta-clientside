@@ -5,7 +5,6 @@ import HomePage from "./Components/HomePage";
 import SongList from "./Components/SongList";
 import Form from "./Components/Form";
 import SongDetails from "./Components/SongDetails";
-import LyricsForm from "./Components/LyricsForm";
 
 export default () => {
   return (

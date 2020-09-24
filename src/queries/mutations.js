@@ -10,7 +10,7 @@ export const ADD_SONG = gql`
 
 export const ADD_LYRIC_TO_SONG = gql`
   mutation AddLyricToSong($songId: ID!, $content: String!) {
-    addLyricToSong(songId: $songID, content: $content) {
+    addLyricToSong(songId: $songId, content: $content) {
       id
     }
   }
@@ -42,7 +42,7 @@ export const EDIT_SONG = gql`
 
 export const EDIT_LYRIC = gql`
   mutation EditLyric($id: ID!, $content: String!) {
-    editSong(id: $id, content: $content) {
+    editLyric(id: $id, content: $content) {
       id
     }
   }

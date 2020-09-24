@@ -48,11 +48,38 @@ const Form = (props) => {
     history.push("/songs");
   };
 
+  const addLyricSubmit = (e) => {
+    e.preventDefault();
+    const { id } = props.match.params;
+    addLyricToSong({ variables: { songId: id, content: input } });
+    history.push(`/songs/${id}`);
+  };
+
+  const editLyricSubmit = (e) => {
+    e.preventDefault();
+    const { id } = props.match.params;
+    editLyric({
+      variables: { id: props.location.state.lyricEdit, content: input },
+    });
+    history.push(`/songs/${id}`);
+  };
+
   const mutationCheck = (e) => {
     if (!props.location) {
       return addSongSubmit(e);
     }
-    return editSongSubmit(e);
+
+    if (props.location.state.title) {
+      return editSongSubmit(e);
+    }
+
+    if (props.location.state.lyricEdit) {
+      return editLyricSubmit(e);
+    }
+
+    if (props.location.state.newLyrics) {
+      return addLyricSubmit(e);
+    }
   };
 
   const renderInput = () => {

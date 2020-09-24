@@ -7,7 +7,7 @@ import { FETCH_SONGS } from "../queries/queries";
 // yo eventually u need 2 fix the list. It is not responsive while errything else is
 
 const List = () => {
-  const { loading, error, data } = useQuery(FETCH_SONGS);
+  const { loading, error, data, refetch } = useQuery(FETCH_SONGS);
 
   const renderSongs = () =>
     data.songs.map((song) => {
@@ -37,6 +37,8 @@ const List = () => {
 
   if (loading) return <h1>Loading...</h1>;
   if (error) return <h1>Error! {error.message}</h1>;
+
+  refetch();
 
   return (
     <div
