@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useLocation, useParams } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 
 import {
@@ -21,19 +21,19 @@ const divStyle = {
   alignItems: "center",
   justifyContent: "center",
 };
-// notes to self:
-// for lyrics, input should become textarea, make a helper func to determin
-// also it should redirect to song details instead of songlist
-// and need to set input to title or content  - DONE
-// lastly, somewhere in props for lyrics a property call lyrics is set to true
-// use that to determine which mutation to call
+
 const Form = (props) => {
   const [addSong] = useMutation(ADD_SONG);
   const [editSong] = useMutation(EDIT_SONG);
   const [addLyricToSong] = useMutation(ADD_LYRIC_TO_SONG);
   const [editLyric] = useMutation(EDIT_LYRIC);
   const [input, setInput] = useState("");
-  const history = useHistory();
+
+  let history = useHistory();
+  let params = useParams();
+  let location = useLocation();
+
+  const { id } = params;
 
   const addSongSubmit = (e) => {
     e.preventDefault();
@@ -43,23 +43,20 @@ const Form = (props) => {
 
   const editSongSubmit = (e) => {
     e.preventDefault();
-    const { id } = props.match.params;
     editSong({ variables: { title: input, id } });
     history.push("/songs");
   };
 
   const addLyricSubmit = (e) => {
     e.preventDefault();
-    const { id } = props.match.params;
     addLyricToSong({ variables: { songId: id, content: input } });
     history.push(`/songs/${id}`);
   };
 
   const editLyricSubmit = (e) => {
     e.preventDefault();
-    const { id } = props.match.params;
     editLyric({
-      variables: { id: props.location.state.lyricEdit, content: input },
+      variables: { id: location.state.lyricEdit, content: input },
     });
     history.push(`/songs/${id}`);
   };
@@ -69,27 +66,41 @@ const Form = (props) => {
       return addSongSubmit(e);
     }
 
-    if (props.location.state.title) {
-      return editSongSubmit(e);
-    }
+    const { title, lyricEdit } = location.state;
 
-    if (props.location.state.lyricEdit) {
-      return editLyricSubmit(e);
-    }
+    if (title) return editSongSubmit(e);
 
-    if (props.location.state.newLyrics) {
-      return addLyricSubmit(e);
-    }
+    if (lyricEdit) return editLyricSubmit(e);
+
+    return addLyricSubmit(e);
   };
 
   const renderInput = () => {
     if (!props.location) {
-      return console.log("no props");
+      return;
     }
-    if (props.location.state.title) {
-      return setInput(props.location.state.title);
+    if (location.state.title) return setInput(location.state.title);
+
+    return setInput(location.state.content);
+  };
+
+  const exitButton = () => {
+    if (!props.location) {
+      return (
+        <>
+          <Link to="/songs">
+            <button className="ui button negative">Exit</button>
+          </Link>
+        </>
+      );
     }
-    return setInput(props.location.state.content);
+    return (
+      <>
+        <Link to={`/songs/${id}`}>
+          <button className="ui button negative">Exit</button>
+        </Link>
+      </>
+    );
   };
 
   useEffect(() => renderInput(), []);
@@ -106,7 +117,7 @@ const Form = (props) => {
       />
     );
 
-    if (!props.location) {
+    if (location) {
       return (
         <>
           <label style={{ color: "#ffe7aa" }}>Song Title</label>
@@ -115,7 +126,7 @@ const Form = (props) => {
       );
     }
 
-    if (!props.location.state.lyrics) {
+    if (!location.state.lyrics) {
       return (
         <>
           <label style={{ color: "#ffe7aa" }}>Song Title</label>
@@ -140,7 +151,7 @@ const Form = (props) => {
   return (
     <div style={divStyle}>
       <h1 style={{ margin: "2%" }}>
-        {props.title || props.location.state.title}
+        {props.title || location.state.title || "Make some beautiful words!"}
       </h1>
       <br />
       <form class="ui form" onSubmit={(e) => mutationCheck(e)}>
@@ -149,9 +160,7 @@ const Form = (props) => {
         <button className="ui button primary" style={{ marginRight: "15%" }}>
           Submit
         </button>
-        <Link to="/songs">
-          <button className="ui button negative">Exit</button>
-        </Link>
+        {exitButton()}
       </form>
     </div>
   );

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useQuery, gql, useMutation } from "@apollo/client";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useParams } from "react-router-dom";
 
 import { DELETE_SONG, DELETE_LYRIC } from "../queries/mutations";
 
@@ -12,12 +12,40 @@ const divStyle = {
   fontFamily: "'Atlas Grotesk Web', 'Open Sans', sans-serif",
 };
 
-const SongDetails = (props) => {
+const divLyricsStyle = {
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+  fontSize: "2rem",
+};
+
+const buttonDivStyle = {
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  fontSize: "2rem",
+};
+
+const newLyricDivStyle = {
+  position: "absolute",
+  bottom: "7rem",
+  right: "10rem",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+  fontSize: "1.5rem",
+};
+
+const SongDetails = () => {
   const [deleteSong] = useMutation(DELETE_SONG);
   const [deleteLyric] = useMutation(DELETE_LYRIC);
-  const history = useHistory();
 
-  const { id } = props.match.params;
+  let history = useHistory();
+  let params = useParams();
+
+  const { id } = params;
 
   const FETCH_SONG = gql`
     {
@@ -52,7 +80,7 @@ const SongDetails = (props) => {
     lyrics.map((lyric) => {
       return (
         <li>
-          {lyric.content}{" "}
+          {lyric.content}
           <Link
             to={{
               pathname: `/songs/${id}/edit-lyrics`,
@@ -84,8 +112,6 @@ const SongDetails = (props) => {
     );
   };
 
-  refetch();
-
   return (
     <div style={divStyle}>
       <h1 style={{ textAlign: "center", paddingTop: "2%" }}>
@@ -99,25 +125,10 @@ const SongDetails = (props) => {
         </Link>
       </h1>
       <br />
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          fontSize: "2rem",
-        }}
-      >
+      <div className="div-lyrics" style={divLyricsStyle}>
         <ol>{toRenderOrNotToRender()}</ol>
       </div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: "15%",
-        }}
-      >
+      <div style={buttonDivStyle}>
         <Link to="/songs">
           <button className="ui button primary">Back to song list</button>
         </Link>
@@ -129,18 +140,7 @@ const SongDetails = (props) => {
           Delete Song
         </button>
       </div>
-      <div
-        style={{
-          position: "absolute",
-          bottom: "7rem",
-          right: "10rem",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          fontSize: "1.5rem",
-        }}
-      >
+      <div style={newLyricDivStyle}>
         <Link
           to={{
             pathname: `/songs/${id}/new-lyrics`,

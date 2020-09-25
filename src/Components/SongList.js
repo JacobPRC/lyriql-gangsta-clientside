@@ -4,7 +4,37 @@ import { useQuery } from "@apollo/client";
 
 import { FETCH_SONGS } from "../queries/queries";
 
-// yo eventually u need 2 fix the list. It is not responsive while errything else is
+const divStyle = {
+  width: "100%",
+  height: "100vh",
+  backgroundColor: "#ffe7aa",
+  color: "#000",
+  fontFamily: "'Atlas Grotesk Web', 'Open Sans', sans-serif",
+};
+
+const iconStyle = {
+  fontSize: "3rem",
+  color: "#0d2f81",
+  alignItems: "center",
+  justifyContent: "center",
+  marginLeft: "25%",
+};
+
+const itemStyle = {
+  cursor: "pointer",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  fontSize: "2rem",
+};
+
+const addNewDivStyle = {
+  position: "absolute",
+  bottom: "8rem",
+  right: "8rem",
+  display: "flex",
+  flexDirection: "column",
+};
 
 const List = () => {
   const { loading, error, data, refetch } = useQuery(FETCH_SONGS);
@@ -12,17 +42,7 @@ const List = () => {
   const renderSongs = () =>
     data.songs.map((song) => {
       return (
-        <div
-          className="item"
-          key={song.id}
-          style={{
-            cursor: "pointer",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            fontSize: "2rem",
-          }}
-        >
+        <div className="item" key={song.id} style={itemStyle}>
           <i className="music icon" />
           <div className="content">
             <Link
@@ -41,15 +61,7 @@ const List = () => {
   refetch();
 
   return (
-    <div
-      style={{
-        width: "100%",
-        height: "100vh",
-        backgroundColor: "#ffe7aa",
-        color: "#000",
-        fontFamily: "'Atlas Grotesk Web', 'Open Sans', sans-serif",
-      }}
-    >
+    <div style={divStyle}>
       <h1
         style={{
           textAlign: "center",
@@ -66,26 +78,9 @@ const List = () => {
       >
         {renderSongs()}
       </div>
-      <div
-        style={{
-          position: "absolute",
-          bottom: "8rem",
-          right: "8rem",
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
+      <div className="add-new" style={addNewDivStyle}>
         <Link to="/songs/new">
-          <i
-            className="plus icon"
-            style={{
-              fontSize: "3rem",
-              color: "#0d2f81",
-              alignItems: "center",
-              justifyContent: "center",
-              marginLeft: "25%",
-            }}
-          ></i>
+          <i className="plus icon" style={iconStyle}></i>
         </Link>
         <h4 style={{ color: "#0d2f81", fontSize: "1.5rem" }}>Add New Song</h4>
       </div>
